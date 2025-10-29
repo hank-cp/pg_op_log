@@ -1,3 +1,8 @@
+[![GitHub release](https://img.shields.io/github/release/hank-cp/pg_og_log.svg)](https://github.com/hank-cp/pg_op_log/releases)
+![Test](https://github.com/hank-cp/pg_op_log/workflows/test/badge.svg)
+![GitHub](https://img.shields.io/github/license/hank-cp/pg_op_log.svg)
+![GitHub last commit](https://img.shields.io/github/last-commit/hank-cp/pg_op_log.svg)
+
 `pg_op_log` is a PostgreSQL extension for saving data changes to a history log table when transactions are committed.
 
 # Conventions and Prerequisites

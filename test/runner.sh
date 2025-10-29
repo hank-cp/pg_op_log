@@ -75,7 +75,22 @@ trap cleanup EXIT
 
 echo ""
 echo "=== Running tests ==="
-$PSQL_CMD -d $TEST_DB -f "$(dirname "$0")/pgtap_test.sql"
+TEST_OUTPUT=$($PSQL_CMD -d $TEST_DB -f "$(dirname "$0")/pgtap_test.sql" 2>&1)
+TEST_EXIT_CODE=$?
+
+echo "$TEST_OUTPUT"
+
+if echo "$TEST_OUTPUT" | grep -q "Looks like you failed"; then
+    echo ""
+    echo "=== Tests FAILED ==="
+    exit 1
+fi
+
+if [ $TEST_EXIT_CODE -ne 0 ]; then
+    echo ""
+    echo "=== Test execution failed with exit code $TEST_EXIT_CODE ==="
+    exit $TEST_EXIT_CODE
+fi
 
 echo ""
 echo "=== Test completed successfully ==="
