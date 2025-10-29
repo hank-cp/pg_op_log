@@ -1,0 +1,5 @@
+comment = 'Operation log extension for tracking data changes'
+default_version = '1.0.0'
+module_pathname = '$libdir/op_log'
+relocatable = true
+requires = 'plv8'

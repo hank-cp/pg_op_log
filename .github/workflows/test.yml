@@ -1,0 +1,71 @@
+name: PostgreSQL Extension Tests
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install PostgreSQL client and build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client postgresql-server-dev-15 build-essential
+
+    - name: Install plv8 extension
+      run: |
+        sudo apt-get install -y postgresql-15-plv8
+
+    - name: Install pgTAP
+      run: |
+        git clone https://github.com/theory/pgtap.git
+        cd pgtap
+        make
+        sudo make install
+
+    - name: Install hstore extension
+      run: |
+        PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS hstore;"
+
+    - name: Build and install extension
+      run: |
+        make
+        sudo make install
+      env:
+        PG_CONFIG: /usr/bin/pg_config
+
+    - name: Create extension in database
+      run: |
+        PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS plv8;"
+        PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS hstore;"
+        PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -f op_log--1.0.0.sql
+
+    - name: Run pgTAP tests
+      run: |
+        PGPASSWORD=postgres pg_prove -h localhost -U postgres -d postgres test/pgtap_test.sql
+
+    - name: Test Summary
+      if: always()
+      run: echo "Tests completed"

@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "ask": [
+      "Read(!/Users/hank/Projects/Lolth/skr/postgres-ext/pg_op_log**)",
+      "Edit(!/Users/hank/Projects/Lolth/skr/postgres-ext/pg_op_log**)"
+    ],
+    "allow": [
+      "Read(/Users/hank/Projects/Lolth/skr/postgres-ext/pg_op_log**)",
+      "Edit(/Users/hank/Projects/Lolth/skr/postgres-ext/pg_op_log**)"
+    ]
+  },
+  "memoryImport": {},
+  "monitoring": {}
+}
