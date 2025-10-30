@@ -14,7 +14,7 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_PASSWORD: postgres
+#          POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
           POSTGRES_DB: postgres
         options: >-
@@ -41,7 +41,7 @@ jobs:
     - name: Install Postgres & extension
       run: |
         pig repo add pigsty pgdg -u
-        pig ext install pg16
+#        pig ext install pg16
         pig ext install plv8
         pig ext install pgtap
 
