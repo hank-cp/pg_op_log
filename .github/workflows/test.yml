@@ -19,7 +19,7 @@ jobs:
       run: |
         apt-get update
         apt-get install -y pip
-        pip install pgxnclient
+        sudo pip install pgxnclient
         pgxn install plv8
         pgxn install pgTap
 
