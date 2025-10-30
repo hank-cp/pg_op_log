@@ -18,7 +18,7 @@ jobs:
     - name: Install Postgres & extension
       run: |
         apt-get update
-        apt-get install -y curl
+        apt-get install -y curl sudo
         curl -fsSL https://repo.pigsty.io/pig | bash
         pig repo add pigsty pgdg -u
         pig ext install pg16 -y
