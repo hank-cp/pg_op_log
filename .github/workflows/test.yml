@@ -43,7 +43,7 @@ jobs:
         pig repo add pigsty pgdg -u
         pig ext install pg16
         pig ext install plv8
-        pig ext install pgTAP
+        pig ext install pgtap
 
     - name: Run test script
       run: |
