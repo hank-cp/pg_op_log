@@ -20,8 +20,8 @@ jobs:
         apt-get update
         apt-get install -y curl sudo pipx
         pipx install pgxnclient
-        pxgn install plv8
-        pxgn install pgTap
+        pgxn install plv8
+        pgxn install pgTap
 
     - name: Run test script
       run: |
