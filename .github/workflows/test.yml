@@ -2,9 +2,9 @@ name: PostgreSQL Extension Tests
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main ]
 
 jobs:
   test:
@@ -34,26 +34,16 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y postgresql-client postgresql-server-dev-16 build-essential
 
+    - name: Install pigsty
+      run: |
+        curl -fsSL https://repo.pigsty.io/pig | bash
+
     - name: Install plv8 extension
       run: |
-        wget https://github.com/plv8/plv8/archive/refs/tags/v3.2.2.tar.gz
-        tar -xzf v3.2.2.tar.gz
-        cd plv8-3.2.2
-        make
-        sudo make install
-
-    - name: Install pgTAP
-      run: |
-        git clone https://github.com/theory/pgtap.git
-        cd pgtap
-        make
-        sudo make install
-
-    - name: Install extensions in database
-      run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS plv8;"
-        PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS hstore;"
-        PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS pgtap;"
+        pig repo add pigsty pgdg -u
+        pig ext install pg16
+        pig ext install plv8
+        pig ext install pgTAP
 
     - name: Run test script
       run: |
