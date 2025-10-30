@@ -18,7 +18,7 @@ jobs:
     - name: Install Postgres & extension
       run: |
         apt-get update
-        apt-get install -y curl sudo pipx make
+        apt-get install -y curl sudo pipx make cmake
         pipx install pgxnclient
         pipx ensurepath
         /github/home/.local/bin/pgxn install plv8
