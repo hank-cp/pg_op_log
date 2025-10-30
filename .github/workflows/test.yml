@@ -18,8 +18,7 @@ jobs:
     - name: Install Postgres & extension
       run: |
         apt-get update
-        apt-get install -y pip sudo
-        sudo pip install pgxnclient
+        apt install python3-pgxnclient
         pgxn install plv8
         pgxn install pgTap
 
