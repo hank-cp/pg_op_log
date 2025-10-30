@@ -9,37 +9,25 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:16
-        env:
-#          POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install Postgres & extension
+    - name: Install pigsty
       run: |
         curl -fsSL https://repo.pigsty.io/pig | bash
+
+    - name: Install Postgres & extension
+      run: |
         pig repo add pigsty pgdg -u
+        pig ext install pg16
         pig ext install plv8
         pig ext install pgtap
 
     - name: Run test script
       run: |
         chmod +x test/runner.sh
-        ./test/runner.sh --host localhost --user postgres --password postgres
+        ./test/runner.sh --host localhost --user postgres
 
     - name: Test Summary
       if: always()
