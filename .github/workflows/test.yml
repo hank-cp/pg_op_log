@@ -18,11 +18,11 @@ jobs:
     - name: Install Postgres & extension
       run: |
         apt-get update
-        apt-get install -y curl sudo pipx make cmake
+        apt-get install -y curl sudo pipx make cmake build-essential pkg-config libstdc++-12-dev
         pipx install pgxnclient
-        pipx ensurepath
-        /github/home/.local/bin/pgxn install plv8
-        /github/home/.local/bin/pgxn install pgTap
+        export PATH=$PATH:/github/home/.local/bin/
+        pgxn install plv8
+        pgxn install pgTap
 
     - name: Run test script
       run: |
