@@ -21,8 +21,8 @@ jobs:
         apt-get install -y curl sudo pipx
         pipx install pgxnclient
         pipx ensurepath
-        pgxn install plv8
-        pgxn install pgTap
+        /root/.local/bin/pgxn install plv8
+        /root/.local/bin/pgxn install pgTap
 
     - name: Run test script
       run: |
