@@ -18,11 +18,9 @@ jobs:
     - name: Install Postgres & extension
       run: |
         apt-get update
-        apt-get install -y curl sudo
-        curl -fsSL https://repo.pigsty.io/pig | bash
-        pig repo add pigsty pgdg -u
-        pig ext install plv8
-        pig ext install pgtap
+        apt-get install -y curl sudo pipx
+        pxgn install plv8
+        pxgn install pgTap
 
     - name: Run test script
       run: |
