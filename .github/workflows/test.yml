@@ -20,6 +20,7 @@ jobs:
         apt-get update
         apt-get install -y curl sudo pipx
         pipx install pgxnclient
+        pipx ensurepath
         pgxn install plv8
         pgxn install pgTap
 
