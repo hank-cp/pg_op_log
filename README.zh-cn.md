@@ -1,5 +1,5 @@
 [![GitHub release](https://img.shields.io/github/release/hank-cp/pg_og_log.svg)](https://github.com/hank-cp/pg_op_log/releases)
-![Test](https://github.com/hank-cp/pg_op_log/workflows/test/badge.svg)
+[![Tests](https://github.com/hank-cp/pg_op_log/actions/workflows/test.yml/badge.svg)](https://github.com/hank-cp/pg_op_log/actions/workflows/test.yml)
 ![GitHub](https://img.shields.io/github/license/hank-cp/pg_op_log.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/hank-cp/pg_op_log.svg)
 
