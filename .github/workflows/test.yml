@@ -10,19 +10,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: postgres:16
+      image: hankcp/postgres-ext:17.6
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Install Postgres & extension
       run: |
-        apt-get update
-        apt-get install -y curl sudo pipx make cmake build-essential pkg-config libstdc++-12-dev
-        pipx install pgxnclient
-        export PATH=$PATH:/github/home/.local/bin/
-        pgxn install plv8
-        pgxn install pgTap
+        pigsty ext add pgtap -y
 
     - name: Run test script
       run: |
