@@ -30,10 +30,21 @@ jobs:
         pig ext add pgtap -y
 
     - name: Run test script
+      id: test
       run: |
         chmod +x test/runner.sh
-        ./test/runner.sh --host localhost --user postgres
+        ./test/runner.sh --host localhost --user postgres | tee test_output.log
 
     - name: Test Summary
       if: always()
-      run: echo "Tests completed"
+      run: |
+        if grep -q "=== Test completed successfully ===" test_output.log; then
+          echo "✓ Tests passed"
+          exit 0
+        elif grep -q "=== Tests FAILED ===" test_output.log; then
+          echo "✗ Tests failed"
+          exit 1
+        else
+          echo "⚠ Test status unknown"
+          exit 1
+        fi
