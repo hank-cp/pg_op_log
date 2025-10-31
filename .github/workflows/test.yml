@@ -12,12 +12,15 @@ jobs:
     container:
       image: hankcp/postgres-ext:17.6
       env:
-        POSTGRES_DB: postgres
         POSTGRES_USER: postgres
         POSTGRES_HOST_AUTH_METHOD: trust
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Start PostgreSQL
+      run: |
+        su - postgres -c "pg_ctl -D /var/lib/postgresql/data start -w"
 
     - name: Install Postgres extension
       run: |
