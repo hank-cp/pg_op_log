@@ -1,4 +1,4 @@
-name: PostgreSQL Extension Tests
+name: Tests
 
 on:
   push:
