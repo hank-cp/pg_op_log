@@ -11,13 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: hankcp/postgres-ext:17.6
+      env:
+        POSTGRES_HOST_AUTH_METHOD: trust
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Install Postgres & extension
       run: |
-        pigsty ext add pgtap -y
+        pig ext add pgtap -y
 
     - name: Run test script
       run: |
