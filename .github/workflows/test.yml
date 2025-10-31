@@ -20,7 +20,7 @@ jobs:
 
     - name: Start PostgreSQL
       run: |
-        su - postgres -c "pg_ctl -D /var/lib/postgresql/data start -w"
+        /usr/lib/postgresql/17/bin/pg_ctl -D /var/lib/postgresql/data start -w
 
     - name: Install Postgres extension
       run: |
