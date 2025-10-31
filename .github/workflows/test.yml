@@ -12,12 +12,14 @@ jobs:
     container:
       image: hankcp/postgres-ext:17.6
       env:
+        POSTGRES_DB: postgres
+        POSTGRES_USER: postgres
         POSTGRES_HOST_AUTH_METHOD: trust
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install Postgres & extension
+    - name: Install Postgres extension
       run: |
         pig ext add pgtap -y
 
