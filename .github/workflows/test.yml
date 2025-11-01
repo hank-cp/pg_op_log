@@ -18,16 +18,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Install Postgres extension
+      run: |
+        pig ext add pgtap -y
+
     - name: Start PostgreSQL
       run: |
         mkdir -p /var/lib/postgresql/data
         chown -R postgres:postgres /var/lib/postgresql/data
         gosu postgres /usr/lib/postgresql/17/bin/initdb -D /var/lib/postgresql/data
         gosu postgres /usr/lib/postgresql/17/bin/pg_ctl -D /var/lib/postgresql/data start -w
-
-    - name: Install Postgres extension
-      run: |
-        pig ext add pgtap -y
 
     - name: Run test script
       id: test

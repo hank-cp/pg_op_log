@@ -5,7 +5,7 @@ CREATE EXTENSION IF NOT EXISTS op_log;
 
 BEGIN;
 
-SELECT plan(48);
+SELECT plan(52);
 
 CREATE TEMP TABLE temp_op_meta (
     op_type text,
@@ -63,6 +63,10 @@ SELECT op_log_enable(
 
 UPDATE temp_op_meta SET op_type = 'CREATE', op_note = 'Test insert';
 
+-------------------------------------------------------------------------------
+-- TEST insert
+-------------------------------------------------------------------------------
+
 INSERT INTO test_users (name, email, metadata, tags, settings, items, modified_by)
 VALUES (
     'Alice',
@@ -116,6 +120,10 @@ SELECT isnt(
     'raw_data should not be NULL for INSERT'
 );
 
+-------------------------------------------------------------------------------
+-- TEST update
+-------------------------------------------------------------------------------
+
 UPDATE temp_op_meta SET op_type = 'UPDATE', op_note = 'Test update';
 
 UPDATE test_users
@@ -136,13 +144,25 @@ SELECT is(
 );
 
 SELECT is(
-    (SELECT action FROM data_op_log WHERE table_name = 'test_users' AND action = 'U' ORDER BY id DESC LIMIT 1),
+    (SELECT action FROM data_op_log WHERE table_name = 'test_users' ORDER BY id DESC LIMIT 1),
     'U',
     'Action should be U for UPDATE'
 );
 
+SELECT is(
+    (SELECT op_type FROM data_op_log WHERE table_name = 'test_users' ORDER BY id DESC LIMIT 1),
+    'UPDATE',
+    'op_type should be extracted from temp_op_meta'
+);
+
+SELECT is(
+    (SELECT op_note FROM data_op_log WHERE table_name = 'test_users' ORDER BY id DESC LIMIT 1),
+    'Test update',
+    'op_note should be extracted from temp_op_meta'
+);
+
 SELECT isnt(
-    (SELECT diff FROM data_op_log WHERE table_name = 'test_users' AND action = 'U' ORDER BY id DESC LIMIT 1),
+    (SELECT diff FROM data_op_log WHERE table_name = 'test_users' ORDER BY id DESC LIMIT 1),
     NULL,
     'diff should not be NULL for UPDATE'
 );
@@ -223,6 +243,10 @@ SELECT is(
     'items diff should show 1 modified item'
 );
 
+-------------------------------------------------------------------------------
+-- TEST update
+-------------------------------------------------------------------------------
+
 UPDATE temp_op_meta SET op_type = 'DELETE', op_note = 'Test delete';
 
 DELETE FROM test_users WHERE id = 1;
@@ -234,13 +258,25 @@ SELECT is(
 );
 
 SELECT is(
-    (SELECT action FROM data_op_log WHERE table_name = 'test_users' AND action = 'D' ORDER BY id DESC LIMIT 1),
+    (SELECT action FROM data_op_log WHERE table_name = 'test_users' ORDER BY id DESC LIMIT 1),
     'D',
     'Action should be D for DELETE'
 );
 
 SELECT is(
-    (SELECT raw_data->>'name' FROM data_op_log WHERE table_name = 'test_users' AND action = 'D' ORDER BY id DESC LIMIT 1),
+    (SELECT op_type FROM data_op_log WHERE table_name = 'test_users' ORDER BY id DESC LIMIT 1),
+    'DELETE',
+    'op_type should be extracted from temp_op_meta'
+);
+
+SELECT is(
+    (SELECT op_note FROM data_op_log WHERE table_name = 'test_users' ORDER BY id DESC LIMIT 1),
+    'Test delete',
+    'op_note should be extracted from temp_op_meta'
+);
+
+SELECT is(
+    (SELECT raw_data->>'name' FROM data_op_log WHERE table_name = 'test_users' ORDER BY id DESC LIMIT 1),
     'Alice Wang',
     'raw_data should contain deleted record data'
 );

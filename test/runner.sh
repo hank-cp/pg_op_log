@@ -7,6 +7,7 @@ PORT="5432"
 USER="postgres"
 PASSWORD=""
 CLEANUP="true"
+TEST_NAME="pg_op_log"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -46,7 +47,7 @@ fi
 
 PSQL_CMD="psql -h $HOST -p $PORT -U $USER"
 
-TEST_DB="pg_op_log_test_$(date +%s)_$RANDOM"
+TEST_DB="${TEST_NAME}_test_$(date +%s)_$RANDOM"
 
 echo "=== Building and installing extension ==="
 if ! command -v pg_config &> /dev/null; then
@@ -75,21 +76,31 @@ trap cleanup EXIT
 
 echo ""
 echo "=== Running tests ==="
-TEST_OUTPUT=$($PSQL_CMD -d $TEST_DB -f "$(dirname "$0")/pgtap_test.sql" 2>&1)
-TEST_EXIT_CODE=$?
 
-echo "$TEST_OUTPUT"
+FAILED=0
+for TEST_FILE in "$(dirname "$0")"/pgtap_*.sql; do
+    if [ -f "$TEST_FILE" ]; then
+        echo "Running $(basename "$TEST_FILE")..."
+        TEST_OUTPUT=$($PSQL_CMD -d $TEST_DB -f "$TEST_FILE" 2>&1)
+        TEST_EXIT_CODE=$?
+        
+        echo "$TEST_OUTPUT"
+        
+        if echo "$TEST_OUTPUT" | grep -q "Looks like you failed"; then
+            FAILED=1
+        fi
+        
+        if [ $TEST_EXIT_CODE -ne 0 ]; then
+            echo "Test execution failed with exit code $TEST_EXIT_CODE"
+            FAILED=1
+        fi
+        echo ""
+    fi
+done
 
-if echo "$TEST_OUTPUT" | grep -q "Looks like you failed"; then
-    echo ""
+if [ $FAILED -eq 1 ]; then
     echo "=== Tests FAILED ==="
     exit 1
-fi
-
-if [ $TEST_EXIT_CODE -ne 0 ]; then
-    echo ""
-    echo "=== Test execution failed with exit code $TEST_EXIT_CODE ==="
-    exit $TEST_EXIT_CODE
 fi
 
 echo ""
