@@ -36,6 +36,8 @@ make install
 * This step is typically executed by the business system when starting a transaction
 
 ```sql
+CREATE EXTENSION IF NOT EXISTS op_log SCHEMA "public" CASCADE;
+
 CREATE TEMP TABLE temp_op_meta (
 	op_type text,
 	op_note text,

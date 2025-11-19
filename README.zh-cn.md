@@ -33,6 +33,8 @@ make install
 * 这一步通常由业务系统在开启一个事务时执行
 
 ```sql
+CREATE EXTENSION IF NOT EXISTS op_log SCHEMA "public" CASCADE;
+
 CREATE TEMP TABLE temp_op_meta (
 	op_type text,
 	op_note text,
