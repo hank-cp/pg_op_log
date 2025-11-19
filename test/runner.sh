@@ -83,13 +83,21 @@ for TEST_FILE in "$(dirname "$0")"/pgtap_*.sql; do
         echo "Running $(basename "$TEST_FILE")..."
         TEST_OUTPUT=$($PSQL_CMD -d $TEST_DB -f "$TEST_FILE" 2>&1)
         TEST_EXIT_CODE=$?
-        
+
         echo "$TEST_OUTPUT"
-        
+
+        # Check for test failures
         if echo "$TEST_OUTPUT" | grep -q "Looks like you failed"; then
             FAILED=1
         fi
-        
+
+        # Check for SQL errors
+        if echo "$TEST_OUTPUT" | grep -qE "ERROR:|FATAL:|PANIC:"; then
+            echo "SQL error detected in test output"
+            FAILED=1
+        fi
+
+        # Check for non-zero exit code
         if [ $TEST_EXIT_CODE -ne 0 ]; then
             echo "Test execution failed with exit code $TEST_EXIT_CODE"
             FAILED=1

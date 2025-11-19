@@ -25,7 +25,7 @@ This extension is based on the following conventions:
 ## Installation
 
 ```bash
-git clone https://github.com/hank_cp/pg_op_log.git
+git clone https://github.com/hank-cp/pg_op_log.git
 cd pg_op_log
 make install
 ```
